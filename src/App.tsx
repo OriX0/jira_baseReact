@@ -3,7 +3,6 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import React from "react";
 import "./App.css";
 import { ProjectList } from "./screens/project-list/index";
 import { LoginScreens } from "./screens/login/index";
