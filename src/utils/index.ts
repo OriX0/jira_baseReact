@@ -32,7 +32,7 @@ export const useMount = (callback: () => void) => {
  * @param {Number} delay 监测延迟
  * @returns
  */
-export const useDebounce = (value: unknown, delay?: number): any => {
+export const useDebounce = <V>(value: V, delay?: number): V => {
   const [debounceValue, setDebounceValue] = useState(value);
   useEffect(() => {
     // 每次value改变的时候  就设置一个定时器  当定时器走完 设置debounce值
