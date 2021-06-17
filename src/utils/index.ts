@@ -43,3 +43,23 @@ export const useDebounce = <V>(value: V, delay?: number): V => {
   // 最终未被清理掉的值就是返回的值
   return debounceValue;
 };
+
+export const useArray = <A>(initArray: A[]) => {
+  const [value, setValue] = useState(initArray);
+  const add = (addValue: A) => {
+    setValue([...value, addValue]);
+  };
+  return {
+    value,
+    setValue,
+    clear: () => {
+      setValue([]);
+    },
+    removeIndex: (index: number) => {
+      const copy = [...value];
+      copy.splice(index, 1);
+      setValue(copy);
+    },
+    add,
+  };
+};
