@@ -1,4 +1,21 @@
-export const SearchPanel = ({ users, params, setParams }) => {
+/*
+ * @Description:
+ * @Author: OriX
+ * @LastEditors: OriX
+ */
+export interface User {
+  id: number;
+  name: string;
+}
+interface SearchPanelProps {
+  users: User[];
+  params: {
+    name: string;
+    personId: string;
+  };
+  setParams: (params: SearchPanelProps["params"]) => void;
+}
+export const SearchPanel = ({ users, params, setParams }: SearchPanelProps) => {
   return (
     <form>
       <input
