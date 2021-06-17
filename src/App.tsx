@@ -4,14 +4,14 @@
  * @LastEditors: OriX
  */
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { ProjectList } from "./screens/project-list/index";
+import { LoginScreens } from "./screens/login/index";
 
 function App() {
   return (
     <div className="App">
-      <ProjectList />
+      <LoginScreens />
     </div>
   );
 }
