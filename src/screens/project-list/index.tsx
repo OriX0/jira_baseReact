@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
-import * as qs from "qs";
 import { cleanObj, useMount, useDebounce } from "../../utils/index";
-const apiUrl = process.env.REACT_APP_API_URL;
+import { useHttp } from "utils/http";
 export const ProjectList = () => {
   const [params, setParams] = useState({
     name: "",
@@ -12,22 +11,13 @@ export const ProjectList = () => {
   const debounceParams = useDebounce(params, 2000);
   const [list, setList] = useState([]);
   const [users, setUser] = useState([]);
+  const client = useHttp();
   // 随着params的改变 数据应该也跟随改变
   useEffect(() => {
-    fetch(`${apiUrl}/projects?${qs.stringify(cleanObj(debounceParams))}`).then(
-      async (response) => {
-        if (response.ok) {
-          setList(await response.json());
-        }
-      }
-    );
+    client("projects", { data: cleanObj(debounceParams) }).then(setList);
   }, [debounceParams]);
   useMount(() => {
-    fetch(`${apiUrl}/users`).then(async (response) => {
-      if (response.ok) {
-        setUser(await response.json());
-      }
-    });
+    client("users", {}).then(setUser);
   });
   return (
     <div>

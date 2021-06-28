@@ -7,7 +7,7 @@ import { User } from "./screens/project-list/search-panel";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const localStorageAuthKey = "__auth_provide_token__";
-export const getToken = localStorage.getItem(localStorageAuthKey);
+export const getToken = () => localStorage.getItem(localStorageAuthKey);
 // 处理请求返回的值  如果有token 就储存到local storage中
 export const handelResponse = ({ user }: { user: User }) => {
   window.localStorage.setItem(localStorageAuthKey, user.token || "");
