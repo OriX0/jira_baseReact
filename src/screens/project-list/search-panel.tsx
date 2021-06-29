@@ -3,6 +3,7 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
+import { Input, Form, Select } from "antd";
 export interface User {
   id: number;
   name: string;
@@ -18,27 +19,27 @@ interface SearchPanelProps {
 }
 export const SearchPanel = ({ users, params, setParams }: SearchPanelProps) => {
   return (
-    <form>
-      <input
+    <Form style={{ marginBottom: "2rem" }} layout={"inline"}>
+      <Input
         placeholder="项目名"
         value={params.name}
         onChange={(event) => setParams({ ...params, name: event.target.value })}
       />
-      <select
+      <Select
         value={params.personId}
-        onChange={(event) => {
-          setParams({ ...params, personId: event.target.value });
+        onChange={(value) => {
+          setParams({ ...params, personId: value });
         }}
       >
         <option value={""}>负责人</option>
         {users.map((user) => {
           return (
-            <option key={user.id} value={user.id}>
+            <Select.Option key={user.id} value={user.id}>
               {user.name}
-            </option>
+            </Select.Option>
           );
         })}
-      </select>
-    </form>
+      </Select>
+    </Form>
   );
 };

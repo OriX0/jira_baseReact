@@ -4,6 +4,7 @@
  * @LastEditors: OriX
  */
 import { User } from "./search-panel";
+import { Table } from "antd";
 interface Project {
   id: number;
   name: string;
@@ -16,27 +17,31 @@ interface ListProps {
   users: User[];
 }
 export const List = ({ list, users }: ListProps) => {
+  const columns = [
+    {
+      title: "项目名",
+      dataIndex: "name",
+      sorter: (a: Project, b: any) => a.name.localeCompare(b.name),
+    },
+    {
+      title: "管理员",
+      render(project: any) {
+        console.log("project", project);
+        return (
+          <span>
+            {users.find((user: User) => user.id === project.personId)?.name ||
+              "未知"}
+          </span>
+        );
+      },
+    },
+  ];
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>项目名</th>
-          <th>管理人</th>
-        </tr>
-      </thead>
-      <tbody>
-        {list.map((project) => {
-          return (
-            <tr key={project.id}>
-              <th>{project.name}</th>
-              <th>
-                {users.find((user) => user.id === project.personId)?.name ||
-                  "未知"}
-              </th>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <Table
+      rowKey={"id"}
+      pagination={false}
+      columns={columns}
+      dataSource={list}
+    />
   );
 };
