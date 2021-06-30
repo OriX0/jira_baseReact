@@ -26,7 +26,6 @@ export const List = ({ list, users }: ListProps) => {
     {
       title: "管理员",
       render(project: any) {
-        console.log("project", project);
         return (
           <span>
             {users.find((user: User) => user.id === project.personId)?.name ||
