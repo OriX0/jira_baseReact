@@ -5,6 +5,7 @@
  */
 import { User } from "./search-panel";
 import { Table } from "antd";
+import dayjs from "dayjs";
 interface Project {
   id: number;
   name: string;
@@ -24,12 +25,28 @@ export const List = ({ list, users }: ListProps) => {
       sorter: (a: Project, b: any) => a.name.localeCompare(b.name),
     },
     {
-      title: "管理员",
+      title: "部门",
+      dataIndex: "organization",
+    },
+    {
+      title: "负责人",
       render(project: any) {
         return (
           <span>
             {users.find((user: User) => user.id === project.personId)?.name ||
               "未知"}
+          </span>
+        );
+      },
+    },
+    {
+      title: "创建时间",
+      render(project: any) {
+        return (
+          <span>
+            {project.created
+              ? dayjs(project.created).format("YYYY-MM-DD")
+              : "无"}
           </span>
         );
       },

@@ -1,8 +1,14 @@
+/*
+ * @Description: project list的主文件
+ * @Author: OriX
+ * @LastEditors: OriX
+ */
 import { useState, useEffect } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import { cleanObj, useMount, useDebounce } from "../../utils/index";
 import { useHttp } from "utils/http";
+import styled from "@emotion/styled";
 export const ProjectList = () => {
   const [params, setParams] = useState({
     name: "",
@@ -20,9 +26,14 @@ export const ProjectList = () => {
     client("users", {}).then(setUser);
   });
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       <SearchPanel users={users} params={params} setParams={setParams} />
       <List list={list} users={users} />
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 3.2rem;
+`;
