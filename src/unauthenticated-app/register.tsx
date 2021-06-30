@@ -5,7 +5,8 @@
  */
 
 import { useAuth } from "context/auth-context";
-import { Form, Button, Input } from "antd";
+import { Form, Input } from "antd";
+import { LongButton } from "./index";
 
 export const RegisterScreens = () => {
   const { register, user } = useAuth();
@@ -20,10 +21,10 @@ export const RegisterScreens = () => {
       <Form.Item name="password" label="密码" rules={[{ required: true }]}>
         <Input.Password type="text" placeholder={"请输入密码"} id="password" />
       </Form.Item>
-      <Button type="primary" htmlType={"submit"}>
+      <LongButton type="primary" htmlType={"submit"}>
         {" "}
         注册
-      </Button>
+      </LongButton>
     </Form>
   );
 };
