@@ -6,12 +6,13 @@
 import { useAuth } from "context/auth-context";
 import { ProjectList } from "./screens/project-list";
 import styled from "@emotion/styled";
+import { Row } from "components/lib";
 export const AuthenticatedApp = () => {
   const { logout } = useAuth();
   return (
     <Container>
       <Header>
-        <HeaderLeft>
+        <HeaderLeft gap={true}>
           <h3>logo</h3>
           <h3>项目</h3>
           <h3>用户</h3>
@@ -40,16 +41,10 @@ const Container = styled.div`
     "nav main aside"
     "footer footer footer";
 `;
-const Header = styled.header`
+const Header = styled(Row)`
   grid-area: header;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 `;
-const HeaderLeft = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
+const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;
 const Main = styled.main`
   grid-area: main;
