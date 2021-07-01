@@ -5,13 +5,13 @@
  */
 import { useState, useEffect } from "react";
 export const isFalse = (value: unknown) => (value === 0 ? false : !value);
-export const cleanObj = (detailObj: object) => {
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
+export const cleanObj = (detailObj: { [key: string]: unknown }) => {
   const cloneObj = { ...detailObj };
-  Object.keys(cloneObj).map((key) => {
-    // @ts-ignore
+  Object.keys(cloneObj).forEach((key) => {
     const value = cloneObj[key];
     if (isFalse(value)) {
-      // @ts-ignore
       delete cloneObj[key];
     }
   });
@@ -24,6 +24,7 @@ export const cleanObj = (detailObj: object) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 /**

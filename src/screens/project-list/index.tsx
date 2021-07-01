@@ -21,6 +21,7 @@ export const ProjectList = () => {
   // 随着params的改变 数据应该也跟随改变
   useEffect(() => {
     client("projects", { data: cleanObj(debounceParams) }).then(setList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceParams]);
   useMount(() => {
     client("users", {}).then(setUser);

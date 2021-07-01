@@ -7,7 +7,7 @@ import { useAuth } from "context/auth-context";
 import { ProjectList } from "./screens/project-list";
 import styled from "@emotion/styled";
 import { Row } from "components/lib";
-import { Dropdown, Menu } from "antd";
+import { Dropdown, Menu, Button } from "antd";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 export const AuthenticatedApp = () => {
   const { user, logout } = useAuth();
@@ -24,13 +24,17 @@ export const AuthenticatedApp = () => {
             overlay={
               <Menu>
                 <Menu.Item key={"logout"}>
-                  <a onClick={logout}>登录</a>
+                  <Button type={"link"} onClick={logout}>
+                    登出
+                  </Button>
                 </Menu.Item>
               </Menu>
             }
           >
             {/* // 默认显示 用户名字 */}
-            <a onClick={(e) => e.preventDefault()}>Hi,{user?.name}</a>
+            <Button type={"link"} onClick={(e) => e.preventDefault()}>
+              Hi,{user?.name}
+            </Button>
           </Dropdown>
         </HeaderRight>
       </Header>

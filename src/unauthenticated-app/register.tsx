@@ -9,7 +9,7 @@ import { Form, Input } from "antd";
 import { LongButton } from "./index";
 
 export const RegisterScreens = () => {
-  const { register, user } = useAuth();
+  const { register } = useAuth();
   const handleSubmit = (value: { username: string; password: string }) => {
     register(value);
   };
