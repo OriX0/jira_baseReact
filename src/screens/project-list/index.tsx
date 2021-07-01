@@ -3,34 +3,31 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
-import { cleanObj, useMount, useDebounce } from "../../utils/index";
-import { useHttp } from "utils/http";
+import { useDebounce } from "../../utils/index";
+import { Typography } from "antd";
 import styled from "@emotion/styled";
+import { useProject } from "utils/useProject";
+import { useUser } from "utils/useUser";
 export const ProjectList = () => {
   const [params, setParams] = useState({
     name: "",
     personId: "",
   });
   const debounceParams = useDebounce(params, 2000);
-  const [list, setList] = useState([]);
-  const [users, setUser] = useState([]);
-  const client = useHttp();
-  // 随着params的改变 数据应该也跟随改变
-  useEffect(() => {
-    client("projects", { data: cleanObj(debounceParams) }).then(setList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceParams]);
-  useMount(() => {
-    client("users", {}).then(setUser);
-  });
+  const { isLoading, error, data: list } = useProject(debounceParams);
+  const { data: users } = useUser();
+
   return (
     <Container>
       <h1>项目列表</h1>
-      <SearchPanel users={users} params={params} setParams={setParams} />
-      <List list={list} users={users} />
+      <SearchPanel users={users || []} params={params} setParams={setParams} />
+      {error ? (
+        <Typography.Text type={"danger"}>{error.message}</Typography.Text>
+      ) : null}
+      <List users={users || []} loading={isLoading} dataSource={list || []} />
     </Container>
   );
 };
