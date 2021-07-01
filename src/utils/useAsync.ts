@@ -16,13 +16,22 @@ const defaultInitState: State<null> = {
   error: null,
   data: null,
 };
+// 定义默认配置
+const defaultConfig = {
+  throwOnError: false,
+};
 // 3.定义customerHook
-export const useAsync = <D>(initialState?: State<D>) => {
+export const useAsync = <D>(
+  initialState?: State<D>,
+  initialConfig?: typeof defaultConfig
+) => {
   // 初始化状态
   const [state, setState] = useState<State<D>>({
     ...defaultInitState,
     ...initialState,
   });
+  // 初始化配置
+  const config = { ...defaultConfig, ...initialConfig };
   // 定义内部关于各个状态的处理函数
   const setData = (data: D) =>
     setState({
@@ -52,7 +61,11 @@ export const useAsync = <D>(initialState?: State<D>) => {
       })
       .catch((error) => {
         setError(error);
-        return error;
+        if (config.throwOnError) {
+          return Promise.reject(error);
+        } else {
+          return error;
+        }
       });
   };
   return {
