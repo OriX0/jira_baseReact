@@ -4,6 +4,8 @@
  * @LastEditors: OriX
  */
 import styled from "@emotion/styled";
+import { Spin, Typography } from "antd";
+import { DevTools } from "jira-dev-tool";
 
 /**
  *  自定义组件  一行内容 行内元素垂直居中
@@ -30,3 +32,24 @@ export const Row = styled.div<{
         : undefined};
   }
 `;
+
+// 覆盖整个页面的加载组件
+const FullPage = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+export const FullPagLoading = () => (
+  <FullPage>
+    <Spin size={"large"} />
+  </FullPage>
+);
+
+// 覆盖整个页面的报错组件
+export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
+  <FullPage>
+    <DevTools />
+    <Typography.Text>{error?.message}</Typography.Text>
+  </FullPage>
+);

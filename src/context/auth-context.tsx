@@ -3,11 +3,13 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { User } from "../screens/project-list/search-panel";
 import * as auth from "auth-provide";
 import { http } from "utils/http";
 import { useMount } from "utils";
+import { useAsync } from "utils/useAsync";
+import { FullPageErrorFallback, FullPagLoading } from "components/lib";
 // 创建context的容器对象
 const AuthContext = React.createContext<
   | {
@@ -36,7 +38,15 @@ const bootstrapUser = async () => {
 };
 
 export const AuthProvide = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const {
+    run,
+    isLoading,
+    isIdle,
+    isError,
+    data: user,
+    setData: setUser,
+    error,
+  } = useAsync<User | null>();
   // 向下传递的方法
   const login = (form: AuthForm) =>
     auth.login(form).then((user) => setUser(user));
@@ -45,8 +55,16 @@ export const AuthProvide = ({ children }: { children: ReactNode }) => {
   const logout = () => auth.logout().then(() => setUser(null));
   // 调用初始化
   useMount(() => {
-    bootstrapUser().then(setUser);
+    run(bootstrapUser());
   });
+  // 判断当前状态 是否加载中 加载loading组件
+  if (isLoading || isIdle) {
+    return <FullPagLoading />;
+  }
+  // 判断当前状态 是否为error 报错 并展示当前错误
+  if (isError) {
+    return <FullPageErrorFallback error={error} />;
+  }
   return (
     <AuthContext.Provider
       children={children}
