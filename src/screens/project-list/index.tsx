@@ -11,11 +11,13 @@ import { Typography } from "antd";
 import styled from "@emotion/styled";
 import { useProject } from "utils/useProject";
 import { useUser } from "utils/useUser";
+import { useUrlQueryParam } from "utils/url";
 export const ProjectList = () => {
-  const [params, setParams] = useState({
+  const [, setParams] = useState({
     name: "",
     personId: "",
   });
+  const [params] = useUrlQueryParam(["name", "personId"]);
   const debounceParams = useDebounce(params, 2000);
   const { isLoading, error, data: list } = useProject(debounceParams);
   const { data: users } = useUser();
