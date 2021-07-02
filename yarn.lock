@@ -7611,7 +7611,7 @@ jira-dev-tool@^1.6.13:
 
 jira-dev-tool@^1.6.59:
   version "1.6.59"
-  resolved "https://registry.npmjs.org/jira-dev-tool/-/jira-dev-tool-1.6.59.tgz#67a98dba9fc9c976d004f3bea1b0349437a0da17"
+  resolved "https://registry.yarnpkg.com/jira-dev-tool/-/jira-dev-tool-1.6.59.tgz#67a98dba9fc9c976d004f3bea1b0349437a0da17"
   integrity sha512-0LsUIP2qMSRzbnlccWeaWOxuh7zN+SHYarcT/YFQE+1mw9k6jbDNCxlxCjrpKfo/BYF8LWL6pmTSvHfDAS0kGg==
   dependencies:
     antd "^4.9.1"

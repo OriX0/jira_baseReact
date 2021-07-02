@@ -3,7 +3,7 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 export const isFalse = (value: unknown) => (value === 0 ? false : !value);
 export const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
@@ -63,4 +63,28 @@ export const useArray = <A>(initArray: A[]) => {
     },
     add,
   };
+};
+
+/**
+ * @param title 标题
+ * @param keepOnUnMount 组件卸载时是否还继续保持该标题
+ */
+// 自定义hook  设置title 及设置当前组件写在后是否保持该title
+export const useDocumentTitle = (title: string, keepOnUnMount: boolean) => {
+  // 页面加载时  oldTitle = 旧 title 即index.html中设置的title
+  const oldTitle = useRef(document.title).current;
+  console.log(oldTitle);
+  // 加载完成 二次获取
+  // 当外部调用该hook 更改 document.title
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  // componentWillUnMount
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnMount) {
+        document.title = oldTitle;
+      }
+    };
+  }, [keepOnUnMount, oldTitle]);
 };

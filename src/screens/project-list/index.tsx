@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
-import { useDebounce } from "../../utils/index";
+import { useDebounce, useDocumentTitle } from "../../utils/index";
 import { Typography } from "antd";
 import styled from "@emotion/styled";
 import { useProject } from "utils/useProject";
@@ -19,7 +19,8 @@ export const ProjectList = () => {
   const debounceParams = useDebounce(params, 2000);
   const { isLoading, error, data: list } = useProject(debounceParams);
   const { data: users } = useUser();
-
+  // 设置标题
+  useDocumentTitle("项目管理", false);
   return (
     <Container>
       <h1>项目列表</h1>
