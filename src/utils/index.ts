@@ -88,3 +88,6 @@ export const useDocumentTitle = (title: string, keepOnUnMount: boolean) => {
     };
   }, [keepOnUnMount, oldTitle]);
 };
+
+export const toOriginRouter = () =>
+  (window.location.href = window.location.origin);
