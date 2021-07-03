@@ -7,18 +7,32 @@ import { User } from "./search-panel";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { Pin } from "components/pin";
+import { useEditProject } from "utils/useProject";
 export interface Project {
   id: number;
   name: string;
   personId: number;
   organization: string;
   created: number;
+  pin: boolean;
 }
 interface ListProps extends TableProps<Project> {
   users: User[];
 }
 export const List = ({ users, ...props }: ListProps) => {
+  const { mutate } = useEditProject();
+  // 柯里化处理
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
   const columns = [
+    {
+      title: <Pin checked={true} disabled={true} />,
+      render(value: any, project: Project) {
+        return (
+          <Pin checked={project.pin} onCheckedChange={pinProject(project.id)} />
+        );
+      },
+    },
     {
       title: "项目名",
       sorter: (a: Project, b: any) => a.name.localeCompare(b.name),

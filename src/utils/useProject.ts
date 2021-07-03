@@ -1,5 +1,5 @@
 /*
- * @Description: 基于useAsync 对project的二次封装
+ * @Description: 基于useAsync 对project的二次封装 各个请求
  * @Author: OriX
  * @LastEditors: OriX
  */
@@ -8,7 +8,7 @@ import { Project } from "../screens/project-list/list";
 import { useEffect } from "react";
 import { useHttp } from "./http";
 import { cleanObj } from "utils";
-
+// 请求project
 export const useProject = (param?: Partial<Project>) => {
   const { run, ...result } = useAsync<Project[]>();
   const client = useHttp();
@@ -18,4 +18,21 @@ export const useProject = (param?: Partial<Project>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param]);
   return result;
+};
+// 修改project
+export const useEditProject = () => {
+  const { run, ...restAsyncResult } = useAsync();
+  const client = useHttp();
+  const mutate = (params: Partial<Project>) => {
+    return run(
+      client(`projects/${params.id}`, {
+        data: params,
+        method: "PATCH",
+      })
+    );
+  };
+  return {
+    mutate,
+    ...restAsyncResult,
+  };
 };
