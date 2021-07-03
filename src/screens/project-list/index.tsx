@@ -13,11 +13,7 @@ import { useProject } from "utils/useProject";
 import { useUser } from "utils/useUser";
 import { useUrlQueryParam } from "utils/url";
 export const ProjectList = () => {
-  const [, setParams] = useState({
-    name: "",
-    personId: "",
-  });
-  const [params] = useUrlQueryParam(["name", "personId"]);
+  const [params, setParams] = useUrlQueryParam(["name", "personId"]);
   const debounceParams = useDebounce(params, 2000);
   const { isLoading, error, data: list } = useProject(debounceParams);
   const { data: users } = useUser();
@@ -34,6 +30,8 @@ export const ProjectList = () => {
     </Container>
   );
 };
+// 要检测的组件 +.whyDidYouRender = 布尔值
+ProjectList.whyDidYouRender = false;
 
 const Container = styled.div`
   padding: 3.2rem;

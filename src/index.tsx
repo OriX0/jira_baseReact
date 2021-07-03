@@ -1,3 +1,4 @@
+import "./wdyr";
 /*
  * @Description:
  * @Author: OriX
