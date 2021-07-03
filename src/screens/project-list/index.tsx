@@ -3,7 +3,6 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { useState } from "react";
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import { useDebounce, useDocumentTitle } from "../../utils/index";
@@ -11,9 +10,10 @@ import { Typography } from "antd";
 import styled from "@emotion/styled";
 import { useProject } from "utils/useProject";
 import { useUser } from "utils/useUser";
-import { useUrlQueryParam } from "utils/url";
+import { useProjectsSearchParams } from "./utils";
 export const ProjectList = () => {
-  const [params, setParams] = useUrlQueryParam(["name", "personId"]);
+  // 使用projectSearchParams hook中获取参数及设置参数的方法 已经对params进行处理了
+  const [params, setParams] = useProjectsSearchParams();
   const debounceParams = useDebounce(params, 2000);
   const { isLoading, error, data: list } = useProject(debounceParams);
   const { data: users } = useUser();

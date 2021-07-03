@@ -20,13 +20,13 @@ interface IdSelectProps
 
 export const IdSelect = (props: IdSelectProps) => {
   // 从props中解构获取参数
-  const { value, onChange, defaultOptionName, options, ...resetOption } = props;
+  const { value, onChange, defaultOptionName, options, ...restOption } = props;
   //
   return (
     <Select
-      value={toNumber(value)}
+      value={options?.length ? toNumber(value) : 0}
       onChange={(value) => onChange(toNumber(value))}
-      {...resetOption}
+      {...restOption}
     >
       {defaultOptionName ? (
         <Select.Option value={0}>{defaultOptionName}</Select.Option>

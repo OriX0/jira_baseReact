@@ -3,7 +3,9 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { Input, Form, Select } from "antd";
+import { Input, Form } from "antd";
+import { UserSelect } from "components/user-select";
+import { Project } from "./list";
 export interface User {
   id: number;
   name: string;
@@ -11,10 +13,7 @@ export interface User {
 }
 interface SearchPanelProps {
   users: User[];
-  params: {
-    name: string;
-    personId: string;
-  };
+  params: Partial<Project>;
   setParams: (params: SearchPanelProps["params"]) => void;
 }
 export const SearchPanel = ({ users, params, setParams }: SearchPanelProps) => {
@@ -30,21 +29,13 @@ export const SearchPanel = ({ users, params, setParams }: SearchPanelProps) => {
         />
       </Form.Item>
       <Form.Item>
-        <Select
+        <UserSelect
           value={params.personId}
           onChange={(value) => {
             setParams({ ...params, personId: value });
           }}
-        >
-          <Select.Option value={""}>负责人</Select.Option>
-          {users.map((user) => {
-            return (
-              <Select.Option key={user.id} value={user.id}>
-                {user.name}
-              </Select.Option>
-            );
-          })}
-        </Select>
+          defaultOptionName={"负责人"}
+        />
       </Form.Item>
     </Form>
   );
