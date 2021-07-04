@@ -15,7 +15,6 @@ export const useUser = (param?: Partial<User>) => {
   // 随着params的改变 数据应该也跟随改变
   useEffect(() => {
     run(client("users", { data: cleanObj(param || {}) }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param]);
+  }, [param, client, run]);
   return result;
 };

@@ -3,7 +3,7 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMountedRef } from "utils";
 // 1.先定义接口类型
 interface State<D> {
@@ -37,54 +37,62 @@ export const useAsync = <D>(
   const [retry, setRetry] = useState(() => () => {});
   // 引入判断当前组件的挂载状态
   const mountedRef = useMountedRef();
-  // 定义内部关于各个状态的处理函数
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: "success",
-      error: null,
-    });
-  const setError = (error: Error) =>
-    setState({
-      error,
-      stat: "error",
-      data: null,
-    });
+  // 定义内部关于各个状态的处理函数 用useCallback对 返回值为函数的进行包裹
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    []
+  );
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error,
+        stat: "error",
+        data: null,
+      }),
+    []
+  );
   // 定义主执行函数 run
-  const run = (
-    promise: Promise<D>,
-    runConfig?: { retry: () => Promise<D> }
-  ) => {
-    // 判断参数是否为promise类型
-    if (!promise || !promise.then) {
-      throw new Error("请传入Promise类型的数据");
-    }
-    // 设置 retry函数
-    setRetry(() => () => {
-      if (runConfig?.retry) {
-        run(runConfig.retry(), runConfig);
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      // 判断参数是否为promise类型
+      if (!promise || !promise.then) {
+        throw new Error("请传入Promise类型的数据");
       }
-    });
-    // 设置当前状态为 loading
-    setState({ ...state, stat: "loading" });
-    // 进行处理
-    return promise
-      .then((data) => {
-        // 判断组件的挂载状态
-        if (mountedRef) {
-          setData(data);
-        }
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-        if (config.throwOnError) {
-          return Promise.reject(error);
-        } else {
-          return error;
+      // 设置 retry函数
+      setRetry(() => () => {
+        if (runConfig?.retry) {
+          run(runConfig.retry(), runConfig);
         }
       });
-  };
+      // 设置当前状态为 loading
+      // useCallback 里面使用setState直接赋值 会触犯无限渲染 应该使用函数式
+      // setState({ ...state, stat: "loading" });
+      setState((prevState) => ({ ...prevState, stat: "loading" }));
+      // 进行处理
+      return promise
+        .then((data) => {
+          // 判断组件的挂载状态
+          if (mountedRef) {
+            setData(data);
+          }
+          return data;
+        })
+        .catch((error) => {
+          setError(error);
+          if (config.throwOnError) {
+            return Promise.reject(error);
+          } else {
+            return error;
+          }
+        });
+    },
+    [config.throwOnError, mountedRef, setData, setError]
+  );
   return {
     // 返回状态标识
     isIdle: state.stat === "idle",

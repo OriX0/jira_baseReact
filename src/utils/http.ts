@@ -6,6 +6,7 @@
 import qs from "qs";
 import * as auth from "auth-provide";
 import { useAuth } from "../context/auth-context";
+import { useCallback } from "react";
 const apiUrl = process.env.REACT_APP_API_URL;
 interface fetchConfig extends RequestInit {
   token?: string;
@@ -50,6 +51,9 @@ export const http = async (
 
 export const useHttp = () => {
   const { user } = useAuth();
-  return (...[endpoint, config = {}]: [string, fetchConfig]) =>
-    http(endpoint, { ...config, token: user?.token });
+  return useCallback(
+    (...[endpoint, config = {}]: [string, fetchConfig]) =>
+      http(endpoint, { ...config, token: user?.token }),
+    [user?.token]
+  );
 };
