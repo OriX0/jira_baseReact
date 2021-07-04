@@ -91,3 +91,18 @@ export const useDocumentTitle = (title: string, keepOnUnMount: boolean) => {
 
 export const toOriginRouter = () =>
   (window.location.href = window.location.origin);
+/**
+ * 返回组件的挂载状态 如果还没挂在或者已经卸载了 就返回false  否则返回true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    // 加载完了
+    mountedRef.current = true;
+    // 卸载
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+  return mountedRef;
+};

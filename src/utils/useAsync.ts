@@ -4,6 +4,7 @@
  * @LastEditors: OriX
  */
 import { useState } from "react";
+import { useMountedRef } from "utils";
 // 1.先定义接口类型
 interface State<D> {
   error: Error | null;
@@ -34,6 +35,8 @@ export const useAsync = <D>(
   const config = { ...defaultConfig, ...initialConfig };
   // 状态 ---刷新函数 及 设置刷新函数   使用
   const [retry, setRetry] = useState(() => () => {});
+  // 引入判断当前组件的挂载状态
+  const mountedRef = useMountedRef();
   // 定义内部关于各个状态的处理函数
   const setData = (data: D) =>
     setState({
@@ -67,7 +70,10 @@ export const useAsync = <D>(
     // 进行处理
     return promise
       .then((data) => {
-        setData(data);
+        // 判断组件的挂载状态
+        if (mountedRef) {
+          setData(data);
+        }
         return data;
       })
       .catch((error) => {
