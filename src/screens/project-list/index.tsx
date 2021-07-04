@@ -15,7 +15,7 @@ export const ProjectList = () => {
   // 使用projectSearchParams hook中获取参数及设置参数的方法 已经对params进行处理了
   const [params, setParams] = useProjectsSearchParams();
   const debounceParams = useDebounce(params, 2000);
-  const { isLoading, error, data: list } = useProject(debounceParams);
+  const { isLoading, error, data: list, retry } = useProject(debounceParams);
   const { data: users } = useUser();
   // 设置标题
   useDocumentTitle("项目管理", false);
@@ -26,7 +26,12 @@ export const ProjectList = () => {
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
-      <List users={users || []} loading={isLoading} dataSource={list || []} />
+      <List
+        refresh={retry}
+        users={users || []}
+        loading={isLoading}
+        dataSource={list || []}
+      />
     </Container>
   );
 };

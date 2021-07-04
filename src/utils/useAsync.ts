@@ -32,6 +32,8 @@ export const useAsync = <D>(
   });
   // 初始化配置
   const config = { ...defaultConfig, ...initialConfig };
+  // 状态 ---刷新函数 及 设置刷新函数   使用
+  const [retry, setRetry] = useState(() => () => {});
   // 定义内部关于各个状态的处理函数
   const setData = (data: D) =>
     setState({
@@ -46,11 +48,20 @@ export const useAsync = <D>(
       data: null,
     });
   // 定义主执行函数 run
-  const run = (promise: Promise<D>) => {
+  const run = (
+    promise: Promise<D>,
+    runConfig?: { retry: () => Promise<D> }
+  ) => {
     // 判断参数是否为promise类型
     if (!promise || !promise.then) {
       throw new Error("请传入Promise类型的数据");
     }
+    // 设置 retry函数
+    setRetry(() => () => {
+      if (runConfig?.retry) {
+        run(runConfig.retry(), runConfig);
+      }
+    });
     // 设置当前状态为 loading
     setState({ ...state, stat: "loading" });
     // 进行处理
@@ -78,6 +89,8 @@ export const useAsync = <D>(
     run,
     setData,
     setError,
+    // 将retry函数返回 以便外部调用
+    retry,
     // 返回当前状态
     ...state,
   };

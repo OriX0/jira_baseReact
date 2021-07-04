@@ -13,8 +13,11 @@ export const useProject = (param?: Partial<Project>) => {
   const { run, ...result } = useAsync<Project[]>();
   const client = useHttp();
   // 随着params的改变 数据应该也跟随改变
+  const fetchProjects = () =>
+    client("projects", { data: cleanObj(param || {}) });
   useEffect(() => {
-    run(client("projects", { data: cleanObj(param || {}) }));
+    // 将刷新函数传入
+    run(fetchProjects(), { retry: fetchProjects });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param]);
   return result;
