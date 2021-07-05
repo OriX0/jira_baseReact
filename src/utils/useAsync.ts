@@ -3,7 +3,7 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { useCallback, useState } from "react";
+import { useCallback, useState, useReducer } from "react";
 import { useMountedRef } from "utils";
 // 1.先定义接口类型
 interface State<D> {
@@ -21,40 +21,52 @@ const defaultInitState: State<null> = {
 const defaultConfig = {
   throwOnError: false,
 };
+// 将dispatch 和 useMounter 结合
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountedRef = useMountedRef();
+  return useCallback(
+    (...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0),
+    [dispatch, mountedRef]
+  );
+};
+
 // 3.定义customerHook
 export const useAsync = <D>(
   initialState?: State<D>,
   initialConfig?: typeof defaultConfig
 ) => {
   // 初始化状态
-  const [state, setState] = useState<State<D>>({
-    ...defaultInitState,
-    ...initialState,
-  });
+  const [state, dispatch] = useReducer(
+    (state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }),
+    {
+      ...defaultInitState,
+      ...initialState,
+    }
+  );
   // 初始化配置
   const config = { ...defaultConfig, ...initialConfig };
   // 状态 ---刷新函数 及 设置刷新函数   使用
   const [retry, setRetry] = useState(() => () => {});
-  // 引入判断当前组件的挂载状态
-  const mountedRef = useMountedRef();
+  // 使用safe dispatch
+  const safeDispatch = useSafeDispatch(dispatch);
   // 定义内部关于各个状态的处理函数 用useCallback对 返回值为函数的进行包裹
   const setData = useCallback(
     (data: D) =>
-      setState({
+      safeDispatch({
         data,
         stat: "success",
         error: null,
       }),
-    []
+    [safeDispatch]
   );
   const setError = useCallback(
     (error: Error) =>
-      setState({
+      safeDispatch({
         error,
         stat: "error",
         data: null,
       }),
-    []
+    [safeDispatch]
   );
   // 定义主执行函数 run
   const run = useCallback(
@@ -72,14 +84,11 @@ export const useAsync = <D>(
       // 设置当前状态为 loading
       // useCallback 里面使用setState直接赋值 会触犯无限渲染 应该使用函数式
       // setState({ ...state, stat: "loading" });
-      setState((prevState) => ({ ...prevState, stat: "loading" }));
+      safeDispatch({ stat: "loading" });
       // 进行处理
       return promise
         .then((data) => {
-          // 判断组件的挂载状态
-          if (mountedRef) {
-            setData(data);
-          }
+          setData(data);
           return data;
         })
         .catch((error) => {
@@ -91,7 +100,7 @@ export const useAsync = <D>(
           }
         });
     },
-    [config.throwOnError, mountedRef, setData, setError]
+    [config.throwOnError, setData, setError, safeDispatch]
   );
   return {
     // 返回状态标识
