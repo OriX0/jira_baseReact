@@ -27,9 +27,7 @@ export const AuthenticatedApp = () => {
         </Routes>
       </Main>
       {/* 要让各个组件都能访问到modal modal的层级应该比较高 */}
-      <ProjectModal
-      //TODO：modal 的打开和关闭
-      />
+      <ProjectModal />
     </Container>
   );
 };

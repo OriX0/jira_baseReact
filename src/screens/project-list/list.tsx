@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/useProject";
 import { ButtonNoPadding } from "components/lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "./project-list.slice";
 export interface Project {
   id: number;
   name: string;
@@ -23,6 +25,7 @@ interface ListProps extends TableProps<Project> {
   refresh?: () => void;
 }
 export const List = ({ users, ...props }: ListProps) => {
+  const dispatch = useDispatch();
   const { mutate } = useEditProject();
   // 柯里化处理
   const pinProject = (id: number) => (pin: boolean) =>
@@ -82,7 +85,7 @@ export const List = ({ users, ...props }: ListProps) => {
                     type={"link"}
                     // TODO:打开modal
                     onClick={() => {
-                      console.log("我要打开modal");
+                      dispatch(projectListActions.showProjectModal());
                     }}
                   >
                     编辑

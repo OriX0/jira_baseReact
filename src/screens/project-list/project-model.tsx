@@ -4,18 +4,26 @@
  * @LastEditors: OriX
  */
 import { Button, Drawer } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  projectListActions,
+  selectProjectModalOpen,
+} from "./project-list.slice";
 
 export const ProjectModal = () => {
+  const dispatch = useDispatch();
+  // 引入 store中的state
+  const projectModalOpen = useSelector(selectProjectModalOpen);
   return (
     <Drawer
-      // TODO:设置modal的 关闭及默认课时
-      onClose={() => console.log("关闭model 的方法")}
-      visible={false}
+      onClose={() => dispatch(projectListActions.closeProjectModal())}
+      visible={projectModalOpen}
       width={"100%"}
     >
       <h1>Project Modal</h1>
-      {/* // TODO:设置modal的 关闭及默认课时 */}
-      <Button onClick={() => console.log("关闭model 的方法")}>关闭</Button>
+      <Button onClick={() => dispatch(projectListActions.closeProjectModal())}>
+        关闭
+      </Button>
     </Drawer>
   );
 };
