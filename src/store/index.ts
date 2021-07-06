@@ -5,10 +5,12 @@
  */
 import { configureStore } from "@reduxjs/toolkit";
 import { projectListSlice } from "screens/project-list/project-list.slice";
+import { authSlice } from "./auth.slice";
 
 // 定义根reducer
 export const rootReducer = {
   projectList: projectListSlice.reducer,
+  authState: authSlice.reducer,
 };
 
 // 定义store

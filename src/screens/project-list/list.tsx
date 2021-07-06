@@ -83,7 +83,6 @@ export const List = ({ users, ...props }: ListProps) => {
                 <Menu.Item key={"edit"}>
                   <ButtonNoPadding
                     type={"link"}
-                    // TODO:打开modal
                     onClick={() => {
                       dispatch(projectListActions.showProjectModal());
                     }}
