@@ -4,7 +4,7 @@
  * @LastEditors: OriX
  */
 import styled from "@emotion/styled";
-import { Spin, Typography } from "antd";
+import { Spin, Button, Typography } from "antd";
 import { DevTools } from "jira-dev-tool";
 
 /**
@@ -53,3 +53,8 @@ export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
     <Typography.Text>{error?.message}</Typography.Text>
   </FullPage>
 );
+
+// 基于antd 的button组件修改padding 为0
+export const ButtonNoPadding = styled(Button)`
+  padding: 0;
+`;

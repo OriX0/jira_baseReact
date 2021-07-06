@@ -6,13 +6,15 @@
 import { useAuth } from "context/auth-context";
 import { ProjectList as ProjectListScreen } from "./screens/project-list";
 import styled from "@emotion/styled";
-import { Row } from "components/lib";
+import { Row, ButtonNoPadding } from "components/lib";
 import { Dropdown, Menu, Button } from "antd";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import { Navigate, Route, Routes } from "react-router";
-
 import { ProjectScreen } from "screens/project";
 import { toOriginRouter } from "utils";
+import { ProjectPopover } from "components/project-popover";
+import { ProjectModal } from "screens/project-list/project-model";
+
 export const AuthenticatedApp = () => {
   return (
     <Container>
@@ -24,43 +26,50 @@ export const AuthenticatedApp = () => {
           <Navigate to={"/projects"} />
         </Routes>
       </Main>
+      {/* 要让各个组件都能访问到modal modal的层级应该比较高 */}
+      <ProjectModal
+      //TODO：modal 的打开和关闭
+      />
     </Container>
   );
 };
 const PageHeader = () => {
-  const { user, logout } = useAuth();
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
-        <Button onClick={toOriginRouter} type={"link"}>
+        <ButtonNoPadding onClick={toOriginRouter} type={"link"}>
           <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
-        </Button>
-
-        <h2>项目</h2>
-        <h2>用户</h2>
+        </ButtonNoPadding>
+        <ProjectPopover />
+        <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item key={"logout"}>
-                <Button type={"link"} onClick={logout}>
-                  登出
-                </Button>
-              </Menu.Item>
-            </Menu>
-          }
-        >
-          {/* // 默认显示 用户名字 */}
-          <Button type={"link"} onClick={(e) => e.preventDefault()}>
-            Hi,{user?.name}
-          </Button>
-        </Dropdown>
+        <User />
       </HeaderRight>
     </Header>
   );
 };
-
+const User = () => {
+  const { logout, user } = useAuth();
+  return (
+    <Dropdown
+      overlay={
+        <Menu>
+          <Menu.Item key={"logout"}>
+            <Button type={"link"} onClick={logout}>
+              登出
+            </Button>
+          </Menu.Item>
+        </Menu>
+      }
+    >
+      {/* // 默认显示 用户名字 */}
+      <Button type={"link"} onClick={(e) => e.preventDefault()}>
+        Hi,{user?.name}
+      </Button>
+    </Dropdown>
+  );
+};
 const Container = styled.div`
   display: grid;
   grid-template-rows: 6rem 1fr;

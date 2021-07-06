@@ -4,11 +4,12 @@
  * @LastEditors: OriX
  */
 import { User } from "./search-panel";
-import { Table, TableProps } from "antd";
+import { Table, TableProps, Dropdown, Menu } from "antd";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/useProject";
+import { ButtonNoPadding } from "components/lib";
 export interface Project {
   id: number;
   name: string;
@@ -66,6 +67,32 @@ export const List = ({ users, ...props }: ListProps) => {
               ? dayjs(project.created).format("YYYY-MM-DD")
               : "无"}
           </span>
+        );
+      },
+    },
+    {
+      // 渲染编辑项目的弹框
+      render(value: any, project: Project) {
+        return (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item key={"edit"}>
+                  <ButtonNoPadding
+                    type={"link"}
+                    // TODO:打开modal
+                    onClick={() => {
+                      console.log("我要打开modal");
+                    }}
+                  >
+                    编辑
+                  </ButtonNoPadding>
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <ButtonNoPadding type={"link"}>...</ButtonNoPadding>
+          </Dropdown>
         );
       },
     },
