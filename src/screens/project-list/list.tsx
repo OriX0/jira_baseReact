@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/useProject";
 import { ButtonNoPadding } from "components/lib";
+import { useProjectModal } from "screens/project-list/utils";
 export interface Project {
   id: number;
   name: string;
@@ -20,13 +21,12 @@ export interface Project {
 }
 interface ListProps extends TableProps<Project> {
   users: User[];
-  refresh?: () => void;
 }
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject();
-  // 柯里化处理
-  const pinProject = (id: number) => (pin: boolean) =>
-    mutate({ id, pin }).then(props.refresh);
+  const { startEdit } = useProjectModal();
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
+  const editProject = (id: number) => () => startEdit(id);
   const columns = [
     {
       title: <Pin checked={true} disabled={true} />,
@@ -77,17 +77,15 @@ export const List = ({ users, ...props }: ListProps) => {
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item key={"edit"}>
-                  <ButtonNoPadding
-                    type={"link"}
-                    // TODO:打开modal
-                    onClick={() => {
-                      console.log("我要打开modal");
-                    }}
-                  >
-                    编辑
-                  </ButtonNoPadding>
+                <Menu.Item
+                  key={"edit"}
+                  onClick={() => {
+                    editProject(project.id);
+                  }}
+                >
+                  编辑
                 </Menu.Item>
+                <Menu.Item key={"delete"}>删除</Menu.Item>
               </Menu>
             }
           >

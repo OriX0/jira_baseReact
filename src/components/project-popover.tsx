@@ -4,12 +4,12 @@
  * @LastEditors: OriX
  */
 import { Divider, List, Popover, Typography } from "antd";
-import { useProject } from "utils/useProject";
+import { useProjects } from "utils/useProject";
 import styled from "@emotion/styled";
 import { ButtonNoPadding } from "components/lib";
 
 export const ProjectPopover = () => {
-  const { data: projects } = useProject();
+  const { data: projects } = useProjects();
   const pinnedProjects = projects?.filter((project) => project.pin);
 
   const content = (

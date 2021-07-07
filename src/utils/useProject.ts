@@ -3,40 +3,54 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { useAsync } from "utils/useAsync";
 import { Project } from "../screens/project-list/list";
-import { useEffect, useCallback } from "react";
 import { useHttp } from "./http";
-import { cleanObj } from "utils";
-// 请求project
-export const useProject = (param?: Partial<Project>) => {
-  const { run, ...result } = useAsync<Project[]>();
+import { useMutation, useQuery, useQueryClient } from "react-query";
+// 请求projects
+export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
-  // 随着params的改变 数据应该也跟随改变
-  const fetchProjects = useCallback(
-    () => client("projects", { data: cleanObj(param || {}) }),
-    [client, param]
+  // 使用useQuery 根据 param 去发送异步请求
+  return useQuery<Project[]>(["projects", param], () =>
+    client("projects", { data: param })
   );
-  useEffect(() => {
-    // 将刷新函数传入
-    run(fetchProjects(), { retry: fetchProjects });
-  }, [param, fetchProjects, run]);
-  return result;
 };
 // 修改project
 export const useEditProject = () => {
-  const { run, ...restAsyncResult } = useAsync();
   const client = useHttp();
-  const mutate = (params: Partial<Project>) => {
-    return run(
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
-        data: params,
         method: "PATCH",
-      })
-    );
-  };
-  return {
-    mutate,
-    ...restAsyncResult,
-  };
+        data: params,
+      }),
+    {
+      // 当请求成功的时候 就更新这个projects这个惠安村
+      onSuccess: () => queryClient.invalidateQueries("projects"),
+    }
+  );
+};
+// 增加project
+export const useAddProject = () => {
+  const client = useHttp();
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<Project>) =>
+      client(`projects`, { data: params, method: "POST" }),
+    {
+      onSuccess: () => queryClient.invalidateQueries("projects"),
+    }
+  );
+};
+
+// 获取单个project的详细信息
+export const useProject = (id?: number) => {
+  const client = useHttp();
+  return useQuery<Project>(
+    ["project", { id }],
+    () => client(`projects/${id}`, {}),
+    {
+      enabled: Boolean(id),
+    }
+  );
 };
