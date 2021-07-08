@@ -7,7 +7,10 @@ import { Button, Drawer, Spin, Form, Input } from "antd";
 import { UserSelect } from "components/user-select";
 import { useAddProject, useEditProject } from "utils/useProject";
 import { useForm } from "antd/es/form/Form";
-import { useProjectModal } from "screens/project-list/utils";
+import {
+  useProjectModal,
+  useProjectsQueryKey,
+} from "screens/project-list/utils";
 import { ErrorBox } from "components/lib";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
@@ -17,7 +20,11 @@ export const ProjectModal = () => {
     useProjectModal();
   const useMutateProject = editingProject ? useEditProject : useAddProject;
 
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject();
+  const {
+    mutateAsync,
+    error,
+    isLoading: mutateLoading,
+  } = useMutateProject(useProjectsQueryKey());
   const [form] = useForm();
   //  表单提交的时候
   const onFinish = (values: any) => {

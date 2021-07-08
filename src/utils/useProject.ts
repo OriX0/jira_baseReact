@@ -5,7 +5,12 @@
  */
 import { Project } from "../screens/project-list/list";
 import { useHttp } from "./http";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryKey, useMutation, useQuery } from "react-query";
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useEditConfig,
+} from "utils/use-optimistic-options";
 // 请求projects
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
@@ -15,31 +20,36 @@ export const useProjects = (param?: Partial<Project>) => {
   );
 };
 // 修改project
-export const useEditProject = () => {
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         method: "PATCH",
         data: params,
       }),
-    {
-      // 当请求成功的时候 就更新这个projects这个惠安村
-      onSuccess: () => queryClient.invalidateQueries("projects"),
-    }
+    useEditConfig(queryKey)
   );
 };
 // 增加project
-export const useAddProject = () => {
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects`, { data: params, method: "POST" }),
-    {
-      onSuccess: () => queryClient.invalidateQueries("projects"),
-    }
+    useAddConfig(queryKey)
+  );
+};
+// 删除project
+export const useDeleteProject = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`projects/${id}`, {
+        method: "DELETE",
+      }),
+    useDeleteConfig(queryKey)
   );
 };
 

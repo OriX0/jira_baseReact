@@ -19,6 +19,11 @@ export const useProjectsSearchParams = () => {
     setParam,
   ] as const;
 };
+export const useProjectsQueryKey = () => {
+  const [params] = useProjectsSearchParams();
+  return ["projects", params];
+};
+
 // projectModel是否展示
 export const useProjectModal = () => {
   // 当前是否是创建项目状态
