@@ -8,7 +8,8 @@ import { useMemo } from "react";
 import { cleanObj } from "utils";
 // 返回页面url中指定键的参数值
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const setSearchParams = useSetUrlSearchParam();
   return [
     useMemo(
       // 遍历传入的key
@@ -21,14 +22,21 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       [searchParams] // 根据searchParams这个状态去判断是否改变及更新
     ),
     // 接收一个参数   该参数应该是一个对象 且key 必须在之前获取过的key
-    (params: { [key in string]: unknown }) => {
-      //  合并参数集 并返回
-      const o = cleanObj({
-        ...Object.fromEntries(searchParams),
-        ...params,
-      }) as URLSearchParamsInit;
-      // 调用set方法 设置参数
-      return setSearchParams(o);
+    (params: { [key in K]: unknown }) => {
+      return setSearchParams(params);
     },
   ] as const;
+};
+// 设置参数hook
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParam] = useSearchParams();
+  return (params: { [key in string]: unknown }) => {
+    //  合并参数集 并返回
+    const o = cleanObj({
+      ...Object.fromEntries(searchParams),
+      ...params,
+    }) as URLSearchParamsInit;
+    // 调用set方法 设置参数
+    return setSearchParam(o);
+  };
 };
