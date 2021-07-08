@@ -22,7 +22,7 @@ export const ProjectList = () => {
   useDocumentTitle("项目管理", false);
   return (
     <Container>
-      <Row>
+      <Row between={true}>
         <h1>项目列表</h1>
         <ButtonNoPadding onClick={open} type={"link"}>
           创建项目

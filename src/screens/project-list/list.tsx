@@ -77,12 +77,7 @@ export const List = ({ users, ...props }: ListProps) => {
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item
-                  key={"edit"}
-                  onClick={() => {
-                    editProject(project.id);
-                  }}
-                >
+                <Menu.Item key={"edit"} onClick={editProject(project.id)}>
                   编辑
                 </Menu.Item>
                 <Menu.Item key={"delete"}>删除</Menu.Item>
