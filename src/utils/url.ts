@@ -22,7 +22,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       [searchParams] // 根据searchParams这个状态去判断是否改变及更新
     ),
     // 接收一个参数   该参数应该是一个对象 且key 必须在之前获取过的key
-    (params: { [key in K]: unknown }) => {
+    (params: { [key in K]?: any }) => {
       return setSearchParams(params);
     },
   ] as const;

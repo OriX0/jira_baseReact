@@ -13,7 +13,7 @@ export interface User {
 }
 interface SearchPanelProps {
   users: User[];
-  params: Partial<Project>;
+  params: Partial<Pick<Project, "name" | "personId">>;
   setParams: (params: SearchPanelProps["params"]) => void;
 }
 export const SearchPanel = ({ users, params, setParams }: SearchPanelProps) => {
