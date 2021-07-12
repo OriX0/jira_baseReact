@@ -5,7 +5,7 @@
  */
 import { useEffect } from "react";
 import { useHttp } from "./http";
-import { User } from "../screens/project-list/search-panel";
+import { User } from "../types/User";
 import { useAsync } from "./useAsync";
 import { cleanObj } from "utils";
 

@@ -3,7 +3,7 @@
  * @Author: OriX
  * @LastEditors: OriX
  */
-import { User } from "./search-panel";
+import { User } from "../../types/User";
 import { Table, TableProps, Dropdown, Menu, Modal } from "antd";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -14,14 +14,7 @@ import {
   useProjectModal,
   useProjectsQueryKey,
 } from "screens/project-list/utils";
-export interface Project {
-  id: number;
-  name: string;
-  personId: number;
-  organization: string;
-  created: number;
-  pin: boolean;
-}
+import { Project } from "../../types/Project";
 interface ListProps extends TableProps<Project> {
   users: User[];
 }
