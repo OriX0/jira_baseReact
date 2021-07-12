@@ -10,6 +10,7 @@ import { http } from "utils/http";
 import { useMount } from "utils";
 import { useAsync } from "utils/useAsync";
 import { FullPageErrorFallback, FullPagLoading } from "components/lib";
+import { useQueryClient } from "react-query";
 // 创建context的容器对象
 const AuthContext = React.createContext<
   | {
@@ -47,12 +48,18 @@ export const AuthProvide = ({ children }: { children: ReactNode }) => {
     setData: setUser,
     error,
   } = useAsync<User | null>();
+  const queryClient = useQueryClient();
   // 向下传递的方法
   const login = (form: AuthForm) =>
     auth.login(form).then((user) => setUser(user));
   const register = (form: AuthForm) =>
     auth.register(form).then((user) => setUser(user));
-  const logout = () => auth.logout().then(() => setUser(null));
+  const logout = () =>
+    auth.logout().then(() => {
+      setUser(null);
+      // 清除 useQuery的所有数据
+      queryClient.clear();
+    });
   // 调用初始化
   useMount(() => {
     run(bootstrapUser());
