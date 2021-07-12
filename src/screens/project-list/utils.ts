@@ -44,8 +44,8 @@ export const useProjectModal = () => {
     setEditingProjectId({ editingProjectId: id });
 
   return {
-    // 如果当前状态的 projectCreate 为true  或者 正在编辑（编辑id有值） 则展示模态框
-    projectModalOpen: projectCreate === "true" || Boolean(editingProject),
+    // 如果当前状态的 projectCreate 为true  或者 正在编辑（url id有值） 则展示模态框
+    projectModalOpen: projectCreate === "true" || Boolean(editingProjectId),
     open,
     close,
     startEdit,
