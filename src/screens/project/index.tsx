@@ -5,7 +5,7 @@
  */
 import { Link } from "react-router-dom";
 import { Route, Routes, Navigate } from "react-router";
-import { KanbanScreen } from "./kanban";
+import { KanbanScreen } from "../kanban";
 import { EpicScreen } from "./epic";
 export const ProjectScreen = () => {
   return (
